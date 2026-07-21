@@ -1,10 +1,7 @@
-# 🦦 OtterMatch
-
-**Find jobs that fit you through conversation, not resumes.**
+# OtterMatch
 
 OtterMatch is an AI-powered job matching platform where Otto the otter discovers your work style through natural conversation. Instead of filling out forms or uploading resumes, you chat with Otto who learns what makes you thrive at work.
 
-## What Makes OtterMatch Different
 
 **Talk, don't fill out forms.** Otto learns about you through actual conversation, not endless dropdowns and checkboxes. Just chat naturally about what you want in a job.
 
@@ -12,9 +9,8 @@ OtterMatch is an AI-powered job matching platform where Otto the otter discovers
 
 **Get real insights.** After chatting, you'll see your work personality visualized in a radar chart. Discover your professional strengths, ideal teammates, and what kind of work environment you thrive in.
 
-**Actually enjoy the process.** Job searching doesn't have to feel like homework. Otto keeps it friendly, simple, and genuinely helpful.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -48,7 +44,7 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000)
 
-## 🎮 How to Use
+## How to Use
 
 1. Click "Start Chat" to begin your conversation with Otto
 2. Chat via text or use the mic button for voice input
@@ -56,7 +52,7 @@ npm run dev
 4. After 3+ messages, click "See Your Results"
 5. View your personalized work personality profile
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
