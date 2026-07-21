@@ -22,6 +22,7 @@ export default function CallPage() {
   const [callDuration, setCallDuration] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isResponding, setIsResponding] = useState(false);
   const [showResultsButton, setShowResultsButton] = useState(false);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -55,6 +56,7 @@ export default function CallPage() {
     const userMessage: Message = { role: 'user', text: messageText };
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    setIsResponding(true);
 
     // Get AI response from Otto
     try {
@@ -82,6 +84,8 @@ export default function CallPage() {
       console.error('Error getting AI response:', error);
       const ottoMessage: Message = { role: 'otto', text: "Sorry, I had a hiccup. Can you say that again?" };
       setMessages(prev => [...prev, ottoMessage]);
+    } finally {
+      setIsResponding(false);
     }
   };
 
@@ -158,109 +162,122 @@ export default function CallPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cake-pink via-cake-lavender to-cake-mint p-6">
-      <div className="max-w-4xl mx-auto h-screen flex flex-col py-6">
-        
-        {/* Header */}
-        <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-white/50 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cake-peach to-cake-rose flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-800 text-lg">Chat with Otto</h3>
-                <p className="text-sm text-gray-500">Duration: {formatTime(callDuration)}</p>
-              </div>
+    <main className="h-screen bg-[#eef2ef] p-3 sm:p-5 lg:p-7">
+      <div className="mx-auto flex h-full max-w-6xl flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+        <header className="flex min-h-16 items-center justify-between border-b border-gray-200 px-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#e7f0eb]">
+              <Phone className="h-5 w-5 text-emerald-800" />
+              <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
             </div>
-            <Link href="/">
-              <button className="p-3 rounded-full bg-red-50 hover:bg-red-100 text-red-500 transition-all">
-                <X className="w-5 h-5" />
-              </button>
+            <div>
+              <h1 className="font-semibold text-gray-900">Chat with Otto</h1>
+              <p className="text-xs text-gray-500">{isResponding ? 'Otto is thinking...' : `In conversation · ${formatTime(callDuration)}`}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="hidden text-sm text-gray-500 sm:block">{messages.filter(message => message.role === 'user').length} of {MIN_USER_MESSAGES_FOR_RESULTS} responses</span>
+            <Link href="/" aria-label="Leave conversation" className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-500 transition hover:bg-red-50 hover:text-red-600">
+              <X className="h-5 w-5" />
             </Link>
           </div>
+        </header>
+
+        <div className="h-1 bg-gray-100">
+          <div
+            className="h-full bg-[#4d8b76] transition-all duration-500"
+            style={{ width: `${Math.min((messages.filter(message => message.role === 'user').length / MIN_USER_MESSAGES_FOR_RESULTS) * 100, 100)}%` }}
+          />
         </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border-2 border-white/50 p-6 mb-6 overflow-y-auto">
-          <div className="space-y-4">
+        <section className="flex-1 overflow-y-auto bg-[#fafbfa] px-4 py-6 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-4xl space-y-5">
             {messages.map((message, index) => (
-              <div key={index} className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+              <div key={index} className={`flex items-end gap-3 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                 {message.role === 'otto' && (
-                  <div className="flex-shrink-0">
-                    <OttoMascot size={50} expression="happy" />
+                  <div className="hidden h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#e7f0eb] sm:flex">
+                    <OttoMascot size={39} expression="happy" />
                   </div>
                 )}
-                <div className={`max-w-[70%] rounded-3xl px-6 py-4 shadow-md ${
-                  message.role === 'otto' 
-                    ? 'bg-gradient-to-br from-cake-lavender to-cake-sky text-gray-900' 
-                    : 'bg-gradient-to-br from-cake-peach to-cake-rose text-gray-900'
+                <div className={`max-w-[88%] rounded-lg px-4 py-3 sm:max-w-[72%] sm:px-5 ${
+                  message.role === 'otto'
+                    ? 'border border-gray-200 bg-white text-gray-800 shadow-sm'
+                    : 'bg-[#235c4b] text-white'
                 }`}>
-                  <p className="text-sm leading-relaxed font-medium">{message.text}</p>
+                  <p className="text-sm leading-6 sm:text-base">{message.text}</p>
                 </div>
               </div>
             ))}
+            {isResponding && (
+              <div className="flex items-end gap-3">
+                <div className="hidden h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#e7f0eb] sm:flex">
+                  <OttoMascot size={39} expression="thinking" />
+                </div>
+                <div className="flex gap-1 rounded-lg border border-gray-200 bg-white px-5 py-4 shadow-sm" aria-label="Otto is typing">
+                  {[0, 1, 2].map((dot) => <span key={dot} className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: `${dot * 0.1}s` }} />)}
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
-          </div>
 
-          {/* Show Results Button */}
           {showResultsButton && (
-            <div className="mt-8 text-center">
+            <div className="mt-8 flex flex-col items-center rounded-lg border border-emerald-200 bg-emerald-50 p-5 text-center sm:flex-row sm:justify-between sm:text-left">
+              <div className="mb-4 sm:mb-0">
+                <p className="font-semibold text-gray-900">Your work-style profile is ready</p>
+                <p className="mt-1 text-sm text-gray-600">You can keep chatting or see what Otto learned.</p>
+              </div>
               <button
                 onClick={goToResults}
-                className="px-8 py-4 bg-gradient-to-br from-cake-mint to-cake-sky hover:scale-105 transition-transform shadow-xl rounded-full font-bold text-gray-800 text-lg"
+                className="min-h-11 rounded-lg bg-[#235c4b] px-5 py-2 font-semibold text-white transition hover:bg-[#194b3d]"
               >
-                See Your Results
+                See your results
               </button>
-              <p className="text-sm text-gray-600 mt-2">We&apos;ve learned enough to build a useful profile.</p>
             </div>
           )}
-        </div>
+          </div>
+        </section>
 
-        {/* Input */}
-        <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border-2 border-white/50 p-6">
-          <div className="flex gap-3">
+        <footer className="border-t border-gray-200 bg-white p-3 sm:p-5">
+          <div className="mx-auto flex max-w-4xl items-center gap-2 sm:gap-3">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !isRecording && handleSendMessage()}
+              onKeyDown={(e) => e.key === 'Enter' && !isRecording && !isResponding && handleSendMessage()}
               placeholder={isRecording ? "Recording..." : isTranscribing ? "Transcribing..." : "Type or speak..."}
-              disabled={isRecording || isTranscribing}
-              className="flex-1 px-6 py-4 rounded-2xl bg-gray-50 border-2 border-gray-200 focus:border-cake-lavender focus:outline-none text-gray-800 placeholder-gray-400 disabled:opacity-50"
+              disabled={isRecording || isTranscribing || isResponding}
+              className="min-h-12 min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-emerald-700 focus:bg-white focus:outline-none disabled:opacity-60 sm:px-5"
             />
             <button
               onClick={isRecording ? stopRecording : startRecording}
               disabled={isTranscribing}
-              className={`px-8 py-4 rounded-2xl transition-all shadow-lg disabled:opacity-50 ${
-                isRecording 
-                  ? 'bg-red-500 hover:bg-red-600 animate-pulse' 
-                  : 'bg-gradient-to-br from-cake-peach to-cake-rose hover:scale-105'
+              aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
+              className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg transition disabled:opacity-50 ${
+                isRecording
+                  ? 'animate-pulse bg-red-600 text-white hover:bg-red-700'
+                  : 'border border-gray-300 bg-white text-gray-600 hover:bg-gray-100'
               }`}
             >
               {isRecording ? (
-                <StopCircle className="w-5 h-5 text-white" />
+                <StopCircle className="h-5 w-5" />
               ) : (
-                <Mic className="w-5 h-5 text-white" />
+                <Mic className="h-5 w-5" />
               )}
             </button>
             <button
               onClick={() => handleSendMessage()}
-              disabled={isRecording || isTranscribing}
-              className="px-8 py-4 rounded-2xl bg-gradient-to-br from-cake-mint to-cake-sky hover:scale-105 transition-transform shadow-lg disabled:opacity-50"
+              disabled={isRecording || isTranscribing || isResponding || !inputValue.trim()}
+              aria-label="Send message"
+              className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[#235c4b] text-white transition hover:bg-[#194b3d] disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 sm:w-14"
             >
-              <Send className="w-5 h-5 text-gray-700" />
+              <Send className="h-5 w-5" />
             </button>
           </div>
           {isTranscribing && (
-            <p className="text-sm text-gray-500 mt-2 text-center">Transcribing your voice...</p>
+            <p className="mt-2 text-center text-sm text-gray-500">Transcribing your voice...</p>
           )}
-        </div>
-
+        </footer>
       </div>
-    </div>
+    </main>
   );
 }

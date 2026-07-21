@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 type OttoMascotProps = {
   size?: number;
@@ -21,9 +22,12 @@ export default function OttoMascot({
         justifyContent: 'center'
       }}
     >
-      <img 
+      <Image
         src="/images/otto.png" 
-        alt="Otto the Otter"
+        alt="Otto"
+        width={320}
+        height={378}
+        priority={size >= 150}
         style={{ 
           width: '100%', 
           height: '100%', 

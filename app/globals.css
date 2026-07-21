@@ -2,12 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background: #f7f8f6;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  margin: 0;
+  color: #202522;
+  background: #f7f8f6;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  min-width: 0;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(43, 108, 88, 0.25);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #d7eee5;
 }
 
 /* Custom scrollbar with cake.me theme */
@@ -21,12 +45,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #FFE5EC;
+  background: #cbd8d2;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FFD6E8;
+  background: #9fb8ad;
 }
 
 /* Message bubble animations */

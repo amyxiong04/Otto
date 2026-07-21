@@ -1,59 +1,53 @@
 'use client';
 
-import React from 'react';
 import OttoMascot from '@/components/OttoMascot';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cake-pink via-cake-blush to-cake-sky flex items-center justify-center p-6">
-      <div className="max-w-2xl w-full text-center">
-        
-        {/* Otto mascot with animation */}
-        <div className="flex justify-center mb-8 animate-float">
-          <OttoMascot size={180} expression="happy" />
-        </div>
+    <main className="min-h-screen bg-[#f7f8f6] px-5 py-6 sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-6xl">
+        <header className="flex items-center justify-between border-b border-gray-200 pb-5">
+          <span className="text-xl font-bold text-gray-900">Otto</span>
+          <span className="hidden text-sm text-gray-500 sm:block">Career fit, through conversation</span>
+        </header>
 
-        {/* Main heading */}
-        <h1 className="text-5xl md:text-6xl font-bold mb-4 text-gray-800">
-          Meet Otto
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-gray-600 mb-3">
-          Your friendly career companion
-        </p>
+        <div className="grid min-h-[calc(100vh-105px)] grid-cols-1 items-center gap-8 py-9 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+          <section className="min-w-0 max-w-2xl">
+            <p className="mb-5 text-sm font-semibold uppercase text-emerald-800">Meet Otto</p>
+            <h1 className="text-5xl font-bold leading-[1.05] text-gray-900 sm:text-6xl lg:text-7xl">
+              Find the kind of work that fits you.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-gray-600">
+              Talk through what energizes you, what drains you, and how you work best. Otto turns the conversation into a practical work-style profile.
+            </p>
 
-        <p className="text-lg text-gray-500 mb-12 max-w-xl mx-auto leading-relaxed">
-          Skip the formal interviews. Just chat with Otto about what you&apos;re looking for,
-          and we&apos;ll help you find a role that actually fits your life.
-        </p>
+            <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <Link href="/info" className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#235c4b] px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-[#194b3d]">
+                Start the conversation
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <span className="text-sm text-gray-500">About 5-10 minutes</span>
+            </div>
 
-        {/* CTA Button */}
-        <Link href="/info">
-          <button className="group bg-white hover:bg-cake-blush text-gray-800 px-10 py-4 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 mx-auto">
-            Start your journey
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </Link>
+            <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
+              {['Personalized profile', 'Natural conversation', 'Clear work insights'].map((item) => (
+                <span key={item} className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-emerald-700" />
+                  {item}
+                </span>
+              ))}
+            </div>
+          </section>
 
-        {/* Trust indicators */}
-        <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-8 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-cake-mint"></div>
-            <span>5 minute conversation</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-cake-lavender"></div>
-            <span>Personalized matches</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-cake-peach"></div>
-            <span>No awkward interviews</span>
+          <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-lg bg-[#e7f0eb] sm:min-h-[420px] lg:min-h-[520px]">
+            <div className="absolute left-6 top-6 h-3 w-16 rounded-full bg-[#edb6aa]" />
+            <div className="absolute bottom-7 right-7 h-20 w-20 rounded-full border border-[#93b6a8]" />
+            <OttoMascot size={260} expression="happy" className="relative drop-shadow-xl sm:scale-110" />
           </div>
         </div>
-
       </div>
-    </div>
+    </main>
   );
 }

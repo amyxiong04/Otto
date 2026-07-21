@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "OtterMatch - Find Your Perfect Job 🦦",
-  description: "Chat with our friendly otter to discover your dream job. No formal interviews, just a friendly conversation!",
+  title: "Otto",
+  description: "A thoughtful conversation about how you work best.",
 };
 
 export default function RootLayout({

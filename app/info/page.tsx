@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import OttoMascot from '@/components/OttoMascot';
-import { ArrowRight, Linkedin, Mail } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Linkedin, Mail, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default function InfoPage() {
@@ -10,82 +10,94 @@ export default function InfoPage() {
   const [linkedin, setLinkedin] = useState('');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cake-lavender via-cake-blush to-cake-mint flex items-center justify-center p-4 sm:p-6">
-      <div className="max-w-5xl w-full">
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-10">
-          <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <div className="flex justify-center lg:justify-start mb-5">
-                <OttoMascot size={110} expression="happy" />
+    <main className="min-h-screen bg-[#f7f8f6] px-4 py-5 sm:px-8 sm:py-8 lg:px-12">
+      <div className="mx-auto flex min-h-[calc(100vh-40px)] w-full max-w-6xl flex-col sm:min-h-[calc(100vh-64px)]">
+        <header className="flex items-center justify-between pb-5">
+          <Link href="/" className="text-xl font-bold text-gray-900">Otto</Link>
+          <span className="text-sm text-gray-500">Step 1 of 2</span>
+        </header>
+
+        <section className="grid flex-1 grid-cols-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="min-w-0 flex flex-col justify-between bg-[#e7f0eb] p-7 sm:p-10 lg:p-12">
+            <div>
+              <div className="mb-7 hidden lg:block">
+                <OttoMascot size={135} expression="happy" />
               </div>
-
-              <h1 className="text-3xl md:text-4xl font-bold mb-3 text-gray-800">
-                Let&apos;s get started
+              <p className="mb-3 text-sm font-semibold uppercase text-emerald-800">A quick introduction</p>
+              <h1 className="max-w-md text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
+                Let&apos;s get started.
               </h1>
-
-              <p className="text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0">
-                Just a couple quick details before you chat with Otto. This keeps the conversation focused and makes your results more useful.
+              <p className="mt-5 max-w-md leading-7 text-gray-600">
+                Share one way to identify your session. Your LinkedIn is optional, and the conversation does the real work.
               </p>
             </div>
 
-            <div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="mt-7 flex items-center gap-3 text-sm text-gray-600 lg:mt-10">
+              <ShieldCheck className="h-5 w-5 text-emerald-700" />
+              Your details are only used for this experience.
+            </div>
+          </div>
+
+          <div className="min-w-0 flex items-center p-7 sm:p-10 lg:p-14">
+            <div className="w-full">
+              <div className="min-w-0 grid grid-cols-1 gap-6 xl:grid-cols-2">
+                <div className="min-w-0">
+                  <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-800">
                     Email address
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                     <input
+                      id="email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(event) => setEmail(event.target.value)}
                       placeholder="you@example.com"
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cake-pink focus:border-transparent transition-all"
+                      className="min-h-12 min-w-0 w-full rounded-lg border border-gray-300 bg-white py-3 pl-12 pr-4 text-gray-900 transition placeholder:text-gray-400 hover:border-gray-400 focus:border-emerald-700 focus:outline-none"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    LinkedIn profile <span className="text-gray-400 text-xs">(optional)</span>
+                <div className="min-w-0">
+                  <label htmlFor="linkedin" className="mb-2 block text-sm font-semibold text-gray-800">
+                    LinkedIn profile <span className="font-normal text-gray-400">(optional)</span>
                   </label>
                   <div className="relative">
-                    <Linkedin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Linkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
                     <input
+                      id="linkedin"
                       type="url"
                       value={linkedin}
-                      onChange={(e) => setLinkedin(e.target.value)}
+                      onChange={(event) => setLinkedin(event.target.value)}
                       placeholder="linkedin.com/in/yourname"
-                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cake-lavender focus:border-transparent transition-all"
+                      className="min-h-12 min-w-0 w-full rounded-lg border border-gray-300 bg-white py-3 pl-12 pr-4 text-gray-900 transition placeholder:text-gray-400 hover:border-gray-400 focus:border-emerald-700 focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
-              <p className="text-xs text-gray-500 mb-6">
-                Otto can use these details to understand your background and keep track of your results.
+              <p className="mt-4 text-sm leading-6 text-gray-500">
+                Otto uses this context to make the conversation and results more relevant to you.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
-                <Link href="/preferences" className="flex-1">
-                  <button
-                    disabled={!email}
-                    className="group w-full bg-gradient-to-r from-cake-pink to-cake-lavender hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-gray-800 px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center gap-3"
-                  >
-                    Continue
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
-
-                <Link href="/" className="text-sm text-gray-500 hover:text-gray-700 transition-colors text-center px-4">
+              <div className="mt-9 flex flex-col-reverse gap-3 border-t border-gray-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <Link href="/" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                  <ArrowLeft className="h-4 w-4" />
                   Back
+                </Link>
+                <Link
+                  href={email ? '/preferences' : '#'}
+                  aria-disabled={!email}
+                  className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 font-semibold transition ${email ? 'bg-[#235c4b] text-white hover:bg-[#194b3d]' : 'cursor-not-allowed bg-gray-200 text-gray-400'}`}
+                >
+                  Continue
+                  <ArrowRight className="h-5 w-5" />
                 </Link>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
