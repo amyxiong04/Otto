@@ -26,16 +26,26 @@ export async function POST(request: NextRequest) {
       .map((msg) => `${msg.role === 'otto' ? 'Otto' : 'User'}: ${msg.text}`)
       .join('\n');
 
-    const analysisPrompt = `Based on this conversation between Otto (the job helper) and a user, analyze the user's work personality and preferences. 
+    const analysisPrompt = `Based on this conversation between Otto and a user, analyze the user's work personality and preferences.
 
 Conversation:
 ${conversationText}
 
+Choose the user's main workplace animal from this list. Use the animal name and descriptor exactly, then explain it in the workPersona:
+- Bear - independent, protective, steady, likes room to focus
+- Dolphin - social, collaborative, emotionally tuned in, energizes a team
+- Owl - analytical, thoughtful, observant, likes depth before action
+- Beaver - structured, reliable, process-minded, builds strong systems
+- Fox - adaptable, strategic, quick, good at navigating ambiguity
+- Bee - busy, helpful, team-oriented, keeps momentum going
+- Cat - autonomous, selective, creative, works best with trust and flexibility
+- Elephant - calm, dependable, big-picture, remembers context and supports others
+
 Provide a JSON response with the following structure:
 {
-  "personalityType": "A fun work-related category (e.g., 'Coffee Hustler', 'Meeting Maven', 'Solo Slayer', 'Team Player', 'Creative Chaos', 'Structure Seeker')",
-  "hashtags": ["#Tag1", "#Tag2"] (2 hashtags that describe them),
-  "workPersona": "A warm, friendly 2-sentence description of their work style",
+  "personalityType": "One workplace animal from the list, formatted like 'Bear - Independent Builder'",
+  "hashtags": ["#Tag1", "#Tag2"] (2 useful tags that explain the type, not random hype words),
+  "workPersona": "A warm, specific 2-sentence explanation of why this animal fits their work style",
   "professionalStrengths": {
     "focused": 1-5 (ability to concentrate deeply),
     "independent": 1-5 (prefers working alone),
@@ -45,11 +55,11 @@ Provide a JSON response with the following structure:
     "creative": 1-5 (innovative and exploratory),
     "collaborative": 1-5 (team-oriented)
   },
-  "workBesties": ["Type 1", "Type 2"] (2 personality types they'd work great with),
-  "colleagues": ["Type 1", "Type 2"] (2 types they'd have more professional relationships with)
+  "workBesties": ["Animal - Descriptor", "Animal - Descriptor"] (2 workplace animal types from the list that would complement them well),
+  "colleagues": ["Animal - Descriptor", "Animal - Descriptor"] (2 workplace animal types from the list that may work differently from them and require more communication)
 }
 
-Make it fun and personality-driven like the cake.me quiz results!`;
+Avoid vague labels like Hustler, Maven, Team Player, Creative Chaos, Solo Slayer, or Structure Seeker. Keep it playful, but make every label mean something.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -101,9 +111,9 @@ Make it fun and personality-driven like the cake.me quiz results!`;
 
 function getDemoResults() {
   return {
-    personalityType: "Creative Collaborator",
-    hashtags: ["#TeamPlayer", "#IdeaMachine"],
-    workPersona: "You thrive in collaborative environments where ideas flow freely. You bring creative energy to projects while keeping the team vibe positive and productive.",
+    personalityType: "Dolphin - Collaborative Connector",
+    hashtags: ["#PeopleEnergy", "#IdeaFlow"],
+    workPersona: "You do your best work when ideas can move between people instead of staying stuck in one person's head. You bring warmth and momentum to a team, especially when the environment leaves room for creativity.",
     professionalStrengths: {
       focused: 4,
       independent: 2,
@@ -113,7 +123,7 @@ function getDemoResults() {
       creative: 5,
       collaborative: 5
     },
-    workBesties: ["Structure Seeker", "Solo Slayer"],
-    colleagues: ["Coffee Hustler", "Meeting Maven"]
+    workBesties: ["Beaver - Systems Builder", "Fox - Adaptive Strategist"],
+    colleagues: ["Bear - Independent Builder", "Owl - Deep Thinker"]
   };
 }

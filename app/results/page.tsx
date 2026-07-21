@@ -42,9 +42,9 @@ function ResultsContent() {
       if (!historyParam) {
         // Demo data if no history
         setResults({
-          personalityType: "Creative Collaborator",
-          hashtags: ["#TeamPlayer", "#IdeaMachine"],
-          workPersona: "You thrive in collaborative environments where ideas flow freely. You bring creative energy to projects while keeping the team vibe positive and productive.",
+          personalityType: "Dolphin - Collaborative Connector",
+          hashtags: ["#PeopleEnergy", "#IdeaFlow"],
+          workPersona: "You do your best work when ideas can move between people instead of staying stuck in one person's head. You bring warmth and momentum to a team, especially when the environment leaves room for creativity.",
           professionalStrengths: {
             focused: 4,
             independent: 2,
@@ -54,8 +54,8 @@ function ResultsContent() {
             creative: 5,
             collaborative: 5
           },
-          workBesties: ["Structure Seeker", "Solo Slayer"],
-          colleagues: ["Coffee Hustler", "Meeting Maven"]
+          workBesties: ["Beaver - Systems Builder", "Fox - Adaptive Strategist"],
+          colleagues: ["Bear - Independent Builder", "Owl - Deep Thinker"]
         });
         setLoading(false);
         return;
@@ -133,7 +133,7 @@ function ResultsContent() {
           <div className="flex justify-center mb-4">
             <OttoMascot size={80} expression="happy" />
           </div>
-          <h1 className="text-4xl font-black text-white mb-2">You are a...</h1>
+          <h1 className="text-4xl font-black text-white mb-2">Your workplace animal is...</h1>
           <h2 className="text-6xl font-black text-gray-900 mb-4">{results.personalityType}</h2>
           <div className="flex gap-3 justify-center flex-wrap">
             {results.hashtags.map((tag, i) => (
@@ -180,9 +180,9 @@ function ResultsContent() {
               <p className="text-gray-700 leading-relaxed">{results.workPersona}</p>
             </div>
 
-            {/* Work Besties */}
+            {/* Best Collaborators */}
             <div className="bg-gradient-to-br from-cake-mint to-cake-sky rounded-3xl p-6 shadow-xl border-2 border-white/50">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Work Besties</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Best Collaborators</h3>
               <div className="flex gap-4">
                 {results.workBesties.map((bestie, i) => (
                   <div key={i} className="flex-1 bg-white/90 rounded-2xl p-4 text-center">
@@ -194,7 +194,7 @@ function ResultsContent() {
 
             {/* Colleagues */}
             <div className="bg-gradient-to-br from-cake-lavender to-cake-pink rounded-3xl p-6 shadow-xl border-2 border-white/50">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Strictly Colleagues</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Different Work Styles</h3>
               <div className="flex gap-4">
                 {results.colleagues.map((colleague, i) => (
                   <div key={i} className="flex-1 bg-white/90 rounded-2xl p-4 text-center">
