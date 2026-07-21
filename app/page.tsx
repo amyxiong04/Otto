@@ -25,8 +25,8 @@ export default function HomePage() {
         </p>
 
         <p className="text-lg text-gray-500 mb-12 max-w-xl mx-auto leading-relaxed">
-          Skip the formal interviews. Just chat with Otto about what you're looking for, 
-          and we'll help you find a role that actually fits your life.
+          Skip the formal interviews. Just chat with Otto about what you&apos;re looking for,
+          and we&apos;ll help you find a role that actually fits your life.
         </p>
 
         {/* CTA Button */}

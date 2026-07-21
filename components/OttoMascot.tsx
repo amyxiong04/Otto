@@ -2,13 +2,12 @@ import React from 'react';
 
 type OttoMascotProps = {
   size?: number;
-  expression?: 'happy' | 'talking' | 'listening' | 'excited';
+  expression?: 'happy' | 'talking' | 'listening' | 'excited' | 'thinking';
   className?: string;
 };
 
 export default function OttoMascot({ 
   size = 120, 
-  expression = 'happy',
   className = '' 
 }: OttoMascotProps) {
   return (

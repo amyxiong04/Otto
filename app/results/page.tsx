@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import OttoMascot from '@/components/OttoMascot';
@@ -23,6 +23,14 @@ type AnalysisResult = {
 };
 
 export default function ResultsPage() {
+  return (
+    <Suspense fallback={<ResultsLoading />}>
+      <ResultsContent />
+    </Suspense>
+  );
+}
+
+function ResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [results, setResults] = useState<AnalysisResult | null>(null);
@@ -208,10 +216,21 @@ export default function ResultsPage() {
             Chat with Otto Again
           </button>
           <p className="text-white/80 text-sm">
-            Ready to find your perfect role? Let's keep chatting! :)
+            Ready to find your perfect role? Let&apos;s keep chatting! :)
           </p>
         </div>
 
+      </div>
+    </div>
+  );
+}
+
+function ResultsLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-cake-pink via-cake-lavender to-cake-mint flex items-center justify-center">
+      <div className="text-center">
+        <OttoMascot size={100} expression="happy" />
+        <p className="mt-4 text-xl font-bold text-white">Analyzing your work style... :)</p>
       </div>
     </div>
   );

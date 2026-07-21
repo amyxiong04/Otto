@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+type ConversationMessage = {
+  role: 'otto' | 'user';
+  text: string;
+};
+
 export async function POST(request: NextRequest) {
   try {
-    const { message, conversationHistory } = await request.json();
+    const { message, conversationHistory = [] } = await request.json() as {
+      message?: string;
+      conversationHistory?: ConversationMessage[];
+    };
 
     if (!message) {
       return NextResponse.json({ error: 'No message provided' }, { status: 400 });
@@ -49,7 +57,7 @@ APPROACH:
 
 Remember: Be helpful and friendly, but keep it brief and simple. Text like you would to a friend, not an interview.`
       },
-      ...conversationHistory.map((msg: any) => ({
+      ...conversationHistory.map((msg) => ({
         role: msg.role === 'otto' ? 'assistant' : 'user',
         content: msg.text
       })),

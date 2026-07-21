@@ -213,7 +213,7 @@ export default function CallPage() {
               >
                 See Your Results
               </button>
-              <p className="text-sm text-gray-600 mt-2">We've learned enough to match you! :)</p>
+              <p className="text-sm text-gray-600 mt-2">We&apos;ve learned enough to match you! :)</p>
             </div>
           )}
         </div>

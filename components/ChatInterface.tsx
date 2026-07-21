@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { PhoneOff, Send, Paperclip, Smile } from 'lucide-react';
+import { PhoneOff, Send, Paperclip } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -27,7 +27,6 @@ export default function ChatInterface({ onHangUp }: ChatInterfaceProps) {
   const [isOttoTyping, setIsOttoTyping] = useState(false);
   const [ottoMood, setOttoMood] = useState<'happy' | 'thinking' | 'excited'>('happy');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [showResumeUpload, setShowResumeUpload] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

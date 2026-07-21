@@ -22,7 +22,7 @@ export default function InfoPage() {
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold mb-3 text-gray-800 text-center">
-            Let's get started
+            Let&apos;s get started
           </h1>
           
           <p className="text-gray-600 mb-8 text-center">

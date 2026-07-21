@@ -59,9 +59,3 @@ export async function POST(request: NextRequest) {
     }, { status: 200 }); // Return 200 for demo purposes
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

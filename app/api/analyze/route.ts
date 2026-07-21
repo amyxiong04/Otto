@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+type ConversationMessage = {
+  role: 'otto' | 'user';
+  text: string;
+};
+
 export async function POST(request: NextRequest) {
   try {
-    const { conversationHistory } = await request.json();
+    const { conversationHistory } = await request.json() as {
+      conversationHistory?: ConversationMessage[];
+    };
 
     if (!conversationHistory || conversationHistory.length === 0) {
       return NextResponse.json({ error: 'No conversation history provided' }, { status: 400 });
@@ -16,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     // Build the conversation for context
     const conversationText = conversationHistory
-      .map((msg: any) => `${msg.role === 'otto' ? 'Otto' : 'User'}: ${msg.text}`)
+      .map((msg) => `${msg.role === 'otto' ? 'Otto' : 'User'}: ${msg.text}`)
       .join('\n');
 
     const analysisPrompt = `Based on this conversation between Otto (the job helper) and a user, analyze the user's work personality and preferences. 
