@@ -91,7 +91,7 @@ function ResultsContent() {
       <div className="min-h-screen bg-gradient-to-br from-cake-pink via-cake-lavender to-cake-mint flex items-center justify-center">
         <div className="text-center">
           <OttoMascot size={100} expression="happy" />
-          <p className="mt-4 text-xl font-bold text-white">Analyzing your work style... :)</p>
+          <p className="mt-4 text-xl font-bold text-white">Analyzing your work style...</p>
         </div>
       </div>
     );
@@ -101,7 +101,7 @@ function ResultsContent() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cake-pink via-cake-lavender to-cake-mint flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl font-bold text-white">Something went wrong :/</p>
+          <p className="text-xl font-bold text-white">Something went wrong.</p>
           <button 
             onClick={() => router.push('/call')}
             className="mt-4 px-6 py-3 bg-white rounded-full font-semibold"
@@ -216,7 +216,7 @@ function ResultsContent() {
             Chat with Otto Again
           </button>
           <p className="text-white/80 text-sm">
-            Ready to find your perfect role? Let&apos;s keep chatting! :)
+            Ready to find your perfect role? Let&apos;s keep chatting.
           </p>
         </div>
 
@@ -230,7 +230,7 @@ function ResultsLoading() {
     <div className="min-h-screen bg-gradient-to-br from-cake-pink via-cake-lavender to-cake-mint flex items-center justify-center">
       <div className="text-center">
         <OttoMascot size={100} expression="happy" />
-        <p className="mt-4 text-xl font-bold text-white">Analyzing your work style... :)</p>
+        <p className="mt-4 text-xl font-bold text-white">Analyzing your work style...</p>
       </div>
     </div>
   );

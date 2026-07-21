@@ -11,10 +11,12 @@ type Message = {
   text: string;
 };
 
+const MIN_USER_MESSAGES_FOR_RESULTS = 8;
+
 export default function CallPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'otto', text: "Hi! Nice to meet you :) So you're looking for a new opportunity? Tell me what's on your mind" }
+    { role: 'otto', text: "Hi, nice to meet you. So you're looking for a new opportunity? Tell me what's on your mind." }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [callDuration, setCallDuration] = useState(0);
@@ -33,10 +35,10 @@ export default function CallPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Check if we have enough conversation to show results (at least 3 user messages)
+  // Check if we have enough conversation to show results.
   useEffect(() => {
     const userMessages = messages.filter(m => m.role === 'user');
-    if (userMessages.length >= 3) {
+    if (userMessages.length >= MIN_USER_MESSAGES_FOR_RESULTS) {
       setShowResultsButton(true);
     }
   }, [messages]);
@@ -73,12 +75,12 @@ export default function CallPage() {
         setMessages(prev => [...prev, ottoMessage]);
       } else {
         // Fallback response
-        const ottoMessage: Message = { role: 'otto', text: "That's interesting! Tell me more :)" };
+        const ottoMessage: Message = { role: 'otto', text: "That's interesting. Tell me more about what you want next." };
         setMessages(prev => [...prev, ottoMessage]);
       }
     } catch (error) {
       console.error('Error getting AI response:', error);
-      const ottoMessage: Message = { role: 'otto', text: "Sorry, I had a hiccup. Can you say that again? :/" };
+      const ottoMessage: Message = { role: 'otto', text: "Sorry, I had a hiccup. Can you say that again?" };
       setMessages(prev => [...prev, ottoMessage]);
     }
   };
@@ -213,7 +215,7 @@ export default function CallPage() {
               >
                 See Your Results
               </button>
-              <p className="text-sm text-gray-600 mt-2">We&apos;ve learned enough to match you! :)</p>
+              <p className="text-sm text-gray-600 mt-2">We&apos;ve learned enough to build a useful profile.</p>
             </div>
           )}
         </div>
