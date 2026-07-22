@@ -16,7 +16,7 @@ const MIN_USER_MESSAGES_FOR_RESULTS = 8;
 export default function CallPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'otto', text: "Hi, nice to meet you. So you're looking for a new opportunity? Tell me what's on your mind." }
+    { role: 'otto', text: "Let's start with a good day at work. What happened that made it feel good?" }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [callDuration, setCallDuration] = useState(0);
@@ -81,7 +81,7 @@ export default function CallPage() {
         setMessages(prev => [...prev, ottoMessage]);
       } else {
         // Fallback response
-        const ottoMessage: Message = { role: 'otto', text: "That's interesting. Tell me more about what you want next." };
+        const ottoMessage: Message = { role: 'otto', text: "I lost the thread for a second. Could you tell me a little more about that?" };
         setMessages(prev => [...prev, ottoMessage]);
       }
     } catch (error) {
