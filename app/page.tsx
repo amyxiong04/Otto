@@ -15,13 +15,13 @@ export default function HomePage() {
         <section className="flex flex-1 flex-col items-center justify-center py-10 text-center">
           <OttoMascot size={220} expression="happy" className="mb-7 drop-shadow-lg" />
           <h1 className="text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
-            What&apos;s your work style?
+            Unlock your workplace personality.
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-gray-600">
-            Answer a few questions about how you think, work with others, and get things done. You&apos;ll see your workplace animal, strongest traits, and who you may work well with.
+            Have a quick chat to discover your workplace animal, strengths, and team fit.
           </p>
           <Link href="/info" className="group mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#235c4b] px-7 py-3 font-semibold text-white transition hover:bg-[#194b3d]">
-            Start the quiz
+            Start chatting
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
           <p className="mt-4 text-sm text-gray-500">About 5 minutes</p>
