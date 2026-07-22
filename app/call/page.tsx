@@ -71,6 +71,7 @@ export default function CallPage() {
           profileContext: {
             role: localStorage.getItem('otto_role') || undefined,
             experience: localStorage.getItem('otto_experience') || undefined,
+            github: localStorage.getItem('otto_github_context') || undefined,
           },
         }),
       });

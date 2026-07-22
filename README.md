@@ -21,6 +21,7 @@ Create `.env.local` for the chat and results email:
 OPENAI_API_KEY=your_openai_api_key_here
 RESEND_API_KEY=your_resend_api_key_here
 RESULTS_FROM_EMAIL="Otto <results@yourdomain.com>"
+GITHUB_TOKEN=your_optional_github_token_here
 ```
 
 ## Built With
