@@ -2,7 +2,7 @@
 
 Live app: https://otto-seven-mocha.vercel.app/
 
-Otto is a small AI career companion that chats with you about how you like to work, then turns the conversation into a simple work-style profile.
+Otto asks about how you like to work, then gives you a simple work-style profile and sends you a copy by email.
 
 You can type or use your voice. After a short chat, Otto shows a results page with your work personality, strengths, and the kinds of teammates you might click with.
 
@@ -15,10 +15,12 @@ npm run dev
 
 Open http://localhost:3000.
 
-To use the AI chat and voice transcription locally, create `.env.local`:
+Create `.env.local` for the chat and results email:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
+RESEND_API_KEY=your_resend_api_key_here
+RESULTS_FROM_EMAIL="Otto <results@yourdomain.com>"
 ```
 
 ## Built With
@@ -27,8 +29,9 @@ OPENAI_API_KEY=your_openai_api_key_here
 - TypeScript
 - Tailwind CSS
 - OpenAI
+- Resend
 - Recharts
 
 ## Note
 
-The OpenAI key should only live in `.env.local` or your Vercel environment variables. Don't commit a real API key.
+API keys should only live in `.env.local` or your Vercel environment variables. Don't commit real keys.

@@ -67,7 +67,11 @@ export default function CallPage() {
         },
         body: JSON.stringify({
           message: messageText,
-          conversationHistory: messages
+          conversationHistory: messages,
+          profileContext: {
+            role: localStorage.getItem('otto_role') || undefined,
+            experience: localStorage.getItem('otto_experience') || undefined,
+          },
         }),
       });
 
@@ -157,8 +161,8 @@ export default function CallPage() {
   };
 
   const goToResults = () => {
-    const historyParam = encodeURIComponent(JSON.stringify(messages));
-    router.push(`/results?history=${historyParam}`);
+    sessionStorage.setItem('otto_conversation', JSON.stringify(messages));
+    router.push('/results');
   };
 
   return (
@@ -171,8 +175,8 @@ export default function CallPage() {
               <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
             </div>
             <div>
-              <h1 className="font-semibold text-gray-900">Chat with Otto</h1>
-              <p className="text-xs text-gray-500">{isResponding ? 'Otto is thinking...' : `In conversation · ${formatTime(callDuration)}`}</p>
+              <h1 className="font-semibold text-gray-900">Conversation</h1>
+              <p className="text-xs text-gray-500">{isResponding ? 'Thinking...' : `In progress · ${formatTime(callDuration)}`}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -213,18 +217,18 @@ export default function CallPage() {
                 <div className="hidden h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#e7f0eb] sm:flex">
                   <OttoMascot size={39} expression="thinking" />
                 </div>
-                <div className="flex gap-1 rounded-lg border border-gray-200 bg-white px-5 py-4 shadow-sm" aria-label="Otto is typing">
+                <div className="flex gap-1 rounded-lg border border-gray-200 bg-white px-5 py-4 shadow-sm" aria-label="Reply in progress">
                   {[0, 1, 2].map((dot) => <span key={dot} className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: `${dot * 0.1}s` }} />)}
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
 
-          {showResultsButton && (
+          {showResultsButton && !isResponding && (
             <div className="mt-8 flex flex-col items-center rounded-lg border border-emerald-200 bg-emerald-50 p-5 text-center sm:flex-row sm:justify-between sm:text-left">
               <div className="mb-4 sm:mb-0">
                 <p className="font-semibold text-gray-900">Your work-style profile is ready</p>
-                <p className="mt-1 text-sm text-gray-600">You can keep chatting or see what Otto learned.</p>
+                <p className="mt-1 text-sm text-gray-600">You can keep chatting or see your summary now.</p>
               </div>
               <button
                 onClick={goToResults}

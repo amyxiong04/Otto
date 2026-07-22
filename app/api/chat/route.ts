@@ -7,9 +7,10 @@ type ConversationMessage = {
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, conversationHistory = [] } = await request.json() as {
+    const { message, conversationHistory = [], profileContext = {} } = await request.json() as {
       message?: string;
       conversationHistory?: ConversationMessage[];
+      profileContext?: { role?: string; experience?: string };
     };
 
     if (!message) {
@@ -29,15 +30,15 @@ export async function POST(request: NextRequest) {
     const messages = [
       {
         role: 'system',
-        content: `You are Otto, a friendly career companion helping someone understand what kind of work fits them. You're warm, approachable, and genuinely interested in understanding them.
+        content: `You are having a short, friendly conversation to understand how someone likes to work.
 
 YOUR STYLE:
-- Text like a friend would: simple, natural, warm
+- Use plain, everyday language
 - Ask ONE focused question at a time
 - Keep responses VERY SHORT (1-2 sentences MAX)
-- Use simple punctuation
-- Be conversational and kind
+- Acknowledge their answer briefly when it adds something useful
 - Do not use emoticons, emoji, or smiley faces
+- Do not use phrases like "That makes sense", "I can see that", or "That's interesting" by default
 
 YOUR GOAL - Discover their work preferences:
 - How they recharge (social vs independent)
@@ -52,13 +53,14 @@ YOUR GOAL - Discover their work preferences:
 - How they prefer feedback, management, and growth
 
 APPROACH:
-- Share brief relatable thoughts: "I find back to back meetings exhausting. How do you feel about lots of scheduled time vs open blocks?"
-- Be genuinely curious: "Interesting! Are you more of a morning person or do you prefer flexible hours?"
-- React naturally and briefly: "That makes sense!" "I can see that" "Got it"
+- Ask concrete questions that are easy to answer
+- Follow up on details instead of running through a generic checklist
 - Do not imply that a match or final result is ready. The app decides when results are available.
 - If the user gives a short answer, ask a useful follow-up instead of moving on too quickly.
 
-Remember: Be helpful and friendly, but keep it brief and simple. Text like you would to a friend, not an interview.`
+Background the user selected: role area ${profileContext.role || 'not provided'}, experience ${profileContext.experience || 'not provided'}.
+
+Keep it brief and simple. It should feel like a normal conversation, not an interview or personality test.`
       },
       ...conversationHistory.map((msg) => ({
         role: msg.role === 'otto' ? 'assistant' : 'user',

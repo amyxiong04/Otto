@@ -26,8 +26,7 @@ export default function PreferencesPage() {
   return (
     <main className="min-h-screen bg-[#f7f8f6] px-4 py-5 sm:px-8 sm:py-8 lg:px-12">
       <div className="mx-auto flex min-h-[calc(100vh-40px)] w-full max-w-6xl flex-col sm:min-h-[calc(100vh-64px)]">
-        <header className="flex items-center justify-between pb-5">
-          <Link href="/" className="text-xl font-bold text-gray-900">Otto</Link>
+        <header className="flex justify-end pb-5">
           <span className="text-sm text-gray-500">Step 2 of 2</span>
         </header>
 
@@ -37,7 +36,7 @@ export default function PreferencesPage() {
               <p className="mb-2 text-sm font-semibold uppercase text-emerald-800">A little context</p>
               <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">What are you looking for?</h1>
             </div>
-            <p className="max-w-md leading-6 text-gray-500">Two quick choices help Otto start with questions that are relevant to you.</p>
+            <p className="max-w-md leading-6 text-gray-500">These two details help us start in the right place.</p>
           </div>
 
           <div className="grid flex-1 grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
@@ -96,10 +95,16 @@ export default function PreferencesPage() {
             </Link>
             <Link
               href={canContinue ? '/call' : '#'}
+              onClick={() => {
+                if (canContinue) {
+                  localStorage.setItem('otto_role', selectedRole);
+                  localStorage.setItem('otto_experience', selectedExperience);
+                }
+              }}
               aria-disabled={!canContinue}
               className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-6 font-semibold transition ${canContinue ? 'bg-[#235c4b] text-white hover:bg-[#194b3d]' : 'cursor-not-allowed bg-gray-200 text-gray-400'}`}
             >
-              Talk to Otto
+              Start chatting
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

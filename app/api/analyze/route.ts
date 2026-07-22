@@ -1,70 +1,94 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { buildAnimalResult, type Strengths } from '@/lib/workplaceAnimals';
+import { sendResultsEmail } from '@/lib/resultsEmail';
 
 type ConversationMessage = {
   role: 'otto' | 'user';
   text: string;
 };
 
+type ProfileContext = {
+  role?: string;
+  experience?: string;
+};
+
+type ModelAnalysis = {
+  personalSummary: string;
+  professionalStrengths: Strengths;
+  evidence: string[];
+};
+
+const analysisSchema = {
+  name: 'work_style_analysis',
+  strict: true,
+  schema: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      personalSummary: {
+        type: 'string',
+        description: 'One natural sentence, under 30 words, grounded in the user messages.',
+      },
+      professionalStrengths: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          focused: { type: 'integer', minimum: 1, maximum: 5 },
+          independent: { type: 'integer', minimum: 1, maximum: 5 },
+          social: { type: 'integer', minimum: 1, maximum: 5 },
+          structured: { type: 'integer', minimum: 1, maximum: 5 },
+          analytical: { type: 'integer', minimum: 1, maximum: 5 },
+          creative: { type: 'integer', minimum: 1, maximum: 5 },
+          collaborative: { type: 'integer', minimum: 1, maximum: 5 },
+        },
+        required: ['focused', 'independent', 'social', 'structured', 'analytical', 'creative', 'collaborative'],
+      },
+      evidence: {
+        type: 'array',
+        minItems: 2,
+        maxItems: 5,
+        items: { type: 'string' },
+        description: 'Short observations tied directly to things the user said.',
+      },
+    },
+    required: ['personalSummary', 'professionalStrengths', 'evidence'],
+  },
+};
+
 export async function POST(request: NextRequest) {
   try {
-    const { conversationHistory } = await request.json() as {
+    const { conversationHistory, profileContext = {}, email } = await request.json() as {
       conversationHistory?: ConversationMessage[];
+      profileContext?: ProfileContext;
+      email?: string;
     };
 
     if (!conversationHistory || conversationHistory.length === 0) {
       return NextResponse.json({ error: 'No conversation history provided' }, { status: 400 });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      // Return demo results if no API key
-      return NextResponse.json(getDemoResults(), { status: 200 });
+    const userMessages = conversationHistory.filter((message) => message.role === 'user');
+    if (userMessages.length < 4) {
+      return NextResponse.json({ error: 'There is not enough conversation to create a reliable result.' }, { status: 400 });
     }
 
-    // Build the conversation for context
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: 'Analysis is not configured.' }, { status: 503 });
+    }
+
     const conversationText = conversationHistory
-      .map((msg) => `${msg.role === 'otto' ? 'Otto' : 'User'}: ${msg.text}`)
+      .map((message) => `${message.role === 'otto' ? 'Assistant' : 'User'}: ${message.text}`)
       .join('\n');
-
-    const analysisPrompt = `Based on this conversation between Otto and a user, analyze the user's work personality and preferences.
-
-Conversation:
-${conversationText}
-
-Choose the user's main workplace animal from this list. Use the animal name and descriptor exactly, then explain it in the workPersona:
-- Bear - independent, protective, steady, likes room to focus
-- Dolphin - social, collaborative, emotionally tuned in, energizes a team
-- Owl - analytical, thoughtful, observant, likes depth before action
-- Beaver - structured, reliable, process-minded, builds strong systems
-- Fox - adaptable, strategic, quick, good at navigating ambiguity
-- Bee - busy, helpful, team-oriented, keeps momentum going
-- Cat - autonomous, selective, creative, works best with trust and flexibility
-- Elephant - calm, dependable, big-picture, remembers context and supports others
-
-Provide a JSON response with the following structure:
-{
-  "personalityType": "One workplace animal from the list, formatted like 'Bear - Independent Builder'",
-  "hashtags": ["#Tag1", "#Tag2"] (2 useful tags that explain the type, not random hype words),
-  "workPersona": "A warm, specific 2-sentence explanation of why this animal fits their work style",
-  "professionalStrengths": {
-    "focused": 1-5 (ability to concentrate deeply),
-    "independent": 1-5 (prefers working alone),
-    "social": 1-5 (energized by people),
-    "structured": 1-5 (likes clear processes),
-    "analytical": 1-5 (data-driven thinker),
-    "creative": 1-5 (innovative and exploratory),
-    "collaborative": 1-5 (team-oriented)
-  },
-  "workBesties": ["Animal - Descriptor", "Animal - Descriptor"] (2 workplace animal types from the list that would complement them well),
-  "colleagues": ["Animal - Descriptor", "Animal - Descriptor"] (2 workplace animal types from the list that may work differently from them and require more communication)
-}
-
-Avoid vague labels like Hustler, Maven, Team Player, Creative Chaos, Solo Slayer, or Structure Seeker. Keep it playful, but make every label mean something.`;
+    const contextText = [
+      profileContext.role ? `Role area: ${profileContext.role}` : '',
+      profileContext.experience ? `Experience: ${profileContext.experience}` : '',
+    ].filter(Boolean).join('\n');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -72,58 +96,50 @@ Avoid vague labels like Hustler, Maven, Team Player, Creative Chaos, Solo Slayer
         messages: [
           {
             role: 'system',
-            content: 'You are an expert at analyzing work personalities and creating fun, insightful personality profiles. Always respond with valid JSON only.'
+            content: `You analyze work preferences using only evidence from the user's own messages.
+
+Scoring rules:
+- A 1 means the user clearly prefers the opposite end of the trait. A 5 means they clearly and repeatedly prefer this trait.
+- Use 3 when the conversation does not provide enough evidence. Do not guess from job title, age, or experience.
+- Treat mixed answers as mixed. Do not force extreme scores to make the profile more interesting.
+- Base the summary on specific preferences the user expressed. Use everyday language and no hype, hashtags, therapy language, or personality-test jargon.
+- Never use statements made by the assistant as evidence about the user.`,
           },
           {
             role: 'user',
-            content: analysisPrompt
-          }
+            content: `${contextText ? `Background supplied by the user:\n${contextText}\n\n` : ''}Conversation:\n${conversationText}`,
+          },
         ],
-        temperature: 0.7,
-        response_format: { type: "json_object" }
+        temperature: 0.2,
+        max_tokens: 500,
+        response_format: {
+          type: 'json_schema',
+          json_schema: analysisSchema,
+        },
       }),
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error('OpenAI API error:', error);
-      
-      if (error.error?.code === 'insufficient_quota') {
-        return NextResponse.json(getDemoResults(), { status: 200 });
-      }
-      
-      return NextResponse.json({ 
-        error: 'Analysis failed',
-        details: error 
-      }, { status: response.status });
+      console.error('OpenAI analysis failed:', response.status, await response.text());
+      return NextResponse.json({ error: 'We could not analyze this conversation right now.' }, { status: 502 });
     }
 
     const data = await response.json();
-    const analysisResult = JSON.parse(data.choices[0]?.message?.content || '{}');
-    
-    return NextResponse.json(analysisResult);
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) {
+      return NextResponse.json({ error: 'The analysis came back empty.' }, { status: 502 });
+    }
 
+    const analysis = JSON.parse(content) as ModelAnalysis;
+    const results = buildAnimalResult(analysis.professionalStrengths, analysis.personalSummary);
+    const cleanEmail = email?.trim().toLowerCase();
+    const emailDelivery = cleanEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)
+      ? await sendResultsEmail(cleanEmail, results)
+      : 'not_requested';
+
+    return NextResponse.json({ ...results, emailDelivery });
   } catch (error) {
     console.error('Analysis error:', error);
-    return NextResponse.json(getDemoResults(), { status: 200 });
+    return NextResponse.json({ error: 'We could not finish the analysis.' }, { status: 500 });
   }
-}
-
-function getDemoResults() {
-  return {
-    personalityType: "Dolphin - Collaborative Connector",
-    hashtags: ["#PeopleEnergy", "#IdeaFlow"],
-    workPersona: "You do your best work when ideas can move between people instead of staying stuck in one person's head. You bring warmth and momentum to a team, especially when the environment leaves room for creativity.",
-    professionalStrengths: {
-      focused: 4,
-      independent: 2,
-      social: 5,
-      structured: 3,
-      analytical: 3,
-      creative: 5,
-      collaborative: 5
-    },
-    workBesties: ["Beaver - Systems Builder", "Fox - Adaptive Strategist"],
-    colleagues: ["Bear - Independent Builder", "Owl - Deep Thinker"]
-  };
 }
